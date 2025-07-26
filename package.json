@@ -2,7 +2,8 @@
   "name": "atcode-scraper",
   "module": "index.ts",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@types/mongodb": "^4.0.7"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -10,6 +11,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "mongodb": "^6.18.0",
     "puppeteer": "^24.15.0"
   }
 }
