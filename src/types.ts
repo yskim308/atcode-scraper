@@ -1,5 +1,6 @@
 export interface Task {
   id: string;
+  url: string;
   taskName: string;
   score: string;
   statement: string;
