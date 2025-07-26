@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 import type { Db } from "mongodb";
 import type { Task } from "./types";
-class MongoService {
+export class MongoService {
   private client: MongoClient;
   private db: Db;
   constructor() {
