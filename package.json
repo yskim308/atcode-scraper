@@ -3,7 +3,8 @@
   "module": "index.ts",
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/mongodb": "^4.0.7"
+    "@types/mongodb": "^4.0.7",
+    "@types/puppeteer": "^7.0.4"
   },
   "peerDependencies": {
     "typescript": "^5"
