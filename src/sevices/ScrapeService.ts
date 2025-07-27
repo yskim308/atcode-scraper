@@ -48,11 +48,13 @@ export class ScrapeService {
 
     const inputSelector =
       ".lang-en > div:nth-child(5) > div:nth-child(1) > section:nth-child(1)";
-    const input = await getFormattedText(inputSelector, this.page);
+    let input = await getFormattedText(inputSelector, this.page);
+    input = input.slice(5);
 
     const outputSelector =
       ".lang-en > div:nth-child(5) > div:nth-child(2) > section:nth-child(1)";
-    const output = await getFormattedText(outputSelector, this.page);
+    let output = await getFormattedText(outputSelector, this.page);
+    output = output.slice(6);
     return {
       id,
       url,
