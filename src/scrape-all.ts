@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 import { ScrapeService } from "./sevices/ScrapeService";
-import { delay } from "./util";}
+import { delay } from "./util";
 import type { Task } from "./types";
 
 const testLink = "https://atcoder.jp/contests/abc416/tasks";
