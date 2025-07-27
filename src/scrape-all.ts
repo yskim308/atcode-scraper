@@ -11,8 +11,9 @@ const taskLink = "https://atcoder.jp/contests/abc416/tasks/abc416_f";
   const page = await browser.newPage();
   const scrapeService = new ScrapeService(browser, page);
   for (let i = 46; i <= 416; ++i) {
+    let contestNumber: string = i < 100 ? `0${i}` : `${i}`;
     const links = await scrapeService.getTaskLinks(
-      `https://atcoder.jp/contest/abc${i}/tasks`,
+      `https://atcoder.jp/contest/abc${contestNumber}/tasks`,
     );
     console.log("will now scrape these links:");
     console.log(links);
