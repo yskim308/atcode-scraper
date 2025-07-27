@@ -1,4 +1,5 @@
 import { JSDOM } from "jsdom";
+import type { Page } from "puppeteer";
 export function cleanKatexFromHTML(html: string): DocumentFragment {
   const dom = new JSDOM(html);
   const doc = dom.window.document;
@@ -26,4 +27,18 @@ export function cleanKatexFromHTML(html: string): DocumentFragment {
   }
 
   return fragment;
+}
+
+export async function getFormattedText(
+  selector: string,
+  page: Page,
+): Promise<string> {
+  const text = await page.$eval(
+    selector,
+    (element) => cleanKatexFromHTML(element.innerHTML).textContent,
+  );
+  if (!text) {
+    throw new Error(`text from ${selector} is void`);
+  }
+  return text;
 }
