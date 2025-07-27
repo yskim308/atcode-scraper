@@ -1,5 +1,5 @@
 import type { Page, Browser } from "puppeteer";
-import type { Task } from "../types";
+import type { Task, Sample } from "../types";
 import { JSDOM } from "jsdom";
 import { getFormattedText } from "../util";
 
@@ -18,6 +18,38 @@ export class ScrapeService {
       (anchors) => anchors.map((a) => a.href),
     );
     return links;
+  }
+
+  async getSamples(): Promise<Sample[]> {
+    const samples = await this.page.evaluate(() => {
+      const pairs: Sample[] = [];
+      const sections = Array.from(document.querySelectorAll("section"));
+
+      let lastLabel = "";
+      let lastContent = "";
+      for (const section of sections) {
+        const h3 = section.querySelector("h3");
+        const pre = section.querySelector("pre");
+        if (!h3 || !pre) continue;
+
+        const label = h3.textContent?.trim().toLowerCase() ?? "";
+        const content = pre.textContent?.trim() ?? "";
+
+        if (label.includes("sample input")) {
+          lastLabel = label;
+          lastContent = content;
+        } else if (label.includes("sample output")) {
+          pairs.push({
+            input: lastContent,
+            output: content,
+          });
+          lastLabel = "";
+          lastContent = "";
+        }
+      }
+      return pairs;
+    });
+    return samples;
   }
 
   async scrapeTaskInfo(taskURL: string): Promise<Task> {
@@ -55,6 +87,8 @@ export class ScrapeService {
       ".lang-en > div:nth-child(5) > div:nth-child(2) > section:nth-child(1)";
     let output = await getFormattedText(outputSelector, this.page);
     output = output.slice(6);
+
+    const samples = await this.getSamples();
     return {
       id,
       url,
@@ -64,7 +98,7 @@ export class ScrapeService {
       constraints,
       input,
       output,
-      samples: [],
+      samples,
     };
   }
 }
