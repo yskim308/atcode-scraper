@@ -17,7 +17,7 @@ class MongoService {
     this.db = this.client.db(DB_NAME);
   }
 
-  async insertTasks(document: Task) {
+  async insertTask(document: Task) {
     const tasks = this.db.collection("tasks");
     const exists = await tasks.findOne({ id: document.id });
     if (exists) return;
