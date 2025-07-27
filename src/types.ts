@@ -7,8 +7,10 @@ export interface Task {
   constraints: string;
   input: string;
   output: string;
-  samples: {
-    input: string;
-    output: string;
-  }[];
+  samples: Sample[];
+}
+
+export interface Sample {
+  input: string;
+  output: string;
 }
