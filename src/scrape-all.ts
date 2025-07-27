@@ -2,6 +2,7 @@ import puppeteer from "puppeteer";
 import { ScrapeService } from "./sevices/ScrapeService";
 import { delay } from "./util";
 import type { Task } from "./types";
+import { mongoService } from "./sevices/MongoService";
 
 (async () => {
   const browser = await puppeteer.launch();
@@ -22,9 +23,11 @@ import type { Task } from "./types";
       const randomDelay = Math.floor(Math.random() * 4) + 1;
       await delay(randomDelay);
       const task: Task = await scrapeService.scrapeTaskInfo(link);
-      console.log("scraped task:");
+      console.log("scraped task, and inserting: ");
       console.log(task);
+      mongoService.insertTask(task);
     }
   }
   await browser.close();
+  mongoService.disconnect();
 })();
