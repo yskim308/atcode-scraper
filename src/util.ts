@@ -40,3 +40,7 @@ export async function getFormattedText(
   }
   return text;
 }
+
+export function delay(delayInSeconds: number) {
+  return new Promise((resolve) => setTimeout(resolve, delayInSeconds * 1000));
+}
