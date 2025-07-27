@@ -33,10 +33,8 @@ export async function getFormattedText(
   selector: string,
   page: Page,
 ): Promise<string> {
-  const text = await page.$eval(
-    selector,
-    (element) => cleanKatexFromHTML(element.innerHTML).textContent,
-  );
+  const html = await page.$eval(selector, (element) => element.innerHTML);
+  const text = cleanKatexFromHTML(html).textContent;
   if (!text) {
     throw new Error(`text from ${selector} is void`);
   }
