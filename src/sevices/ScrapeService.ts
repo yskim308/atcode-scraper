@@ -1,5 +1,5 @@
 import type { Page, Browser } from "puppeteer";
-import type { Task } from "./types";
+import type { Task } from "../types";
 import { JSDOM } from "jsdom";
 
 export class ScrapeService {
