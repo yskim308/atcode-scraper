@@ -20,19 +20,27 @@ export class ScrapeService {
     return links;
   }
 
-  getFormattedText(sections: HTMLElement[], headerText: string) {
-    const targetSection = sections.find((section) => {
-      section.querySelector("h3")?.innerText === headerText;
-    });
-    if (!targetSection) {
-      throw new Error(`header text ${headerText} could not be found`);
+  async getFormattedText(headerText: string) {
+    // get the contents of the target section
+    const result = await this.page.evaluate((headerText) => {
+      const sections = document.querySelectorAll("section");
+      const targetSection = Array.from(sections).find((section) => {
+        return section.querySelector("h3")?.innerText === headerText;
+      });
+      if (!targetSection) {
+        throw new Error(`header text ${headerText} could not be found`);
+      }
+      targetSection.querySelector("h3")?.remove();
+      return targetSection;
+    }, headerText);
+
+    // clean up latet and return text content
+    const cleanHTML = cleanKatexFromHTML(result.innerHTML);
+    const textContent = cleanHTML.textContent;
+    if (!textContent) {
+      throw new Error(`no text content in ${headerText}`);
     }
-    targetSection.querySelector("h3")?.remove();
-    const cleanHTML = cleanKatexFromHTML(targetSection?.innerHTML);
-    if (!cleanHTML.textContent) {
-      throw new Error(`text content in ${headerText} is null?`);
-    }
-    return cleanHTML.textContent;
+    return textContent;
   }
 
   async getSamples(sections: HTMLElement[]): Promise<Sample[]> {
