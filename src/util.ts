@@ -29,19 +29,3 @@ export function cleanKatexFromHTML(html: string): DocumentFragment {
 
   return fragment;
 }
-
-export async function getFormattedText(
-  selector: string,
-  page: Page,
-): Promise<string> {
-  const html = await page.$eval(selector, (element) => element.innerHTML);
-  const text = cleanKatexFromHTML(html).textContent;
-  if (!text) {
-    throw new Error(`text from ${selector} is void`);
-  }
-  return text;
-}
-
-export function delay(delayInSeconds: number) {
-  return new Promise((resolve) => setTimeout(resolve, delayInSeconds * 1000));
-}
