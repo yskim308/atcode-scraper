@@ -1,11 +1,12 @@
 import type { Page, Browser } from "puppeteer";
 import type { Task, Sample } from "../types";
 import { JSDOM } from "jsdom";
-import { getFormattedText } from "../util";
+import { cleanKatexFromHTML } from "../util";}
 
 export class ScrapeService {
   private browser: Browser;
   private page: Page;
+
   constructor(browser: Browser, page: Page) {
     this.browser = browser;
     this.page = page;
@@ -18,6 +19,17 @@ export class ScrapeService {
       (anchors) => anchors.map((a) => a.href),
     );
     return links;
+  }
+
+  getFormattedText(sections: HTMLSelectElement[], headerText: string) {
+    const targetSection = sections.find((section) => {
+      section.querySelector('h3')?.innerText === headerText;
+    })
+    if (!targetSection) {
+      throw new Error(`header text ${headerText} could not be found`);
+    }
+    targetSection?.querySelector('h3')?.remove();
+    return cleanKatexFromHTML(targetSection?.innerHTML);
   }
 
   async getSamples(): Promise<Sample[]> {
