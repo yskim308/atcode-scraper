@@ -11,7 +11,7 @@ import { mongoService } from "./sevices/MongoService";
   const page = await browser.newPage();
   const scrapeService = new ScrapeService(browser, page);
 
-  for (let i = 46; i <= 416; ++i) {
+  for (let i = 86; i <= 416; ++i) {
     // getting task links
     let contestNumber: string = i < 100 ? `0${i}` : `${i}`;
     const contestLink = `https://atcoder.jp/contests/abc${contestNumber}/tasks`;
