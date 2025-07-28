@@ -21,15 +21,19 @@ export class ScrapeService {
     return links;
   }
 
-  getFormattedText(sections: HTMLSelectElement[], headerText: string) {
+  getFormattedText(sections: HTMLElement[], headerText: string) {
     const targetSection = sections.find((section) => {
       section.querySelector('h3')?.innerText === headerText;
     })
     if (!targetSection) {
       throw new Error(`header text ${headerText} could not be found`);
     }
-    targetSection?.querySelector('h3')?.remove();
-    return cleanKatexFromHTML(targetSection?.innerHTML);
+    targetSection.querySelector('h3')?.remove();
+    const cleanHTML = cleanKatexFromHTML(targetSection?.innerHTML);
+    if (!cleanHTML.textContent) {
+      throw new Error(`text content in ${headerText} is null?`);
+    }
+    return cleanHTML.textContent;
   }
 
   async getSamples(): Promise<Sample[]> {
@@ -80,25 +84,15 @@ export class ScrapeService {
       return element.textContent as string;
     });
 
-    const scoreSelector = ".lang-en > p:nth-child(1) > var:nth-child(1)";
-    const score = await getFormattedText(scoreSelector, this.page);
+    const sections: HTMLElement[] = await this.page.$$eval('section', (sections) => {
+      return sections;
+    })
 
-    const statementSelector = ".lang-en > div:nth-child(2)";
-    const statement = await getFormattedText(statementSelector, this.page);
-
-    const constraintsSelector =
-      ".lang-en > div:nth-child(3) > section:nth-child(1) > ul:nth-child(2)";
-    const constraints = await getFormattedText(constraintsSelector, this.page);
-
-    const inputSelector =
-      ".lang-en > div:nth-child(5) > div:nth-child(1) > section:nth-child(1)";
-    let input = await getFormattedText(inputSelector, this.page);
-    input = input.slice(5);
-
-    const outputSelector =
-      ".lang-en > div:nth-child(5) > div:nth-child(2) > section:nth-child(1)";
-    let output = await getFormattedText(outputSelector, this.page);
-    output = output.slice(6);
+    const score = this.getFormattedText(sections, "Score");
+    const statement = this.getFormattedText(sections, "Problem Statement");
+    const constraints = this.getFormattedText(sections, "Constraints");
+    let input = this.getFormattedText(sections, "Input");
+    let output = this.getFormattedText(sections, "Output");
 
     const samples = await this.getSamples();
     return {
