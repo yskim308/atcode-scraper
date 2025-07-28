@@ -25,17 +25,20 @@ export class ScrapeService {
     const result = await this.page.evaluate((headerText) => {
       const sections = document.querySelectorAll("section");
       const targetSection = Array.from(sections).find((section) => {
-        return section.querySelector("h3")?.innerText === headerText;
+        const h3 = section.querySelector("h3");
+        if (!h3) return false;
+        const label = h3.textContent?.trim() ?? "";
+        return label.includes(headerText);
       });
       if (!targetSection) {
         throw new Error(`header text ${headerText} could not be found`);
       }
       targetSection.querySelector("h3")?.remove();
-      return targetSection;
+      return targetSection.innerHTML;
     }, headerText);
 
     // clean up latet and return text content
-    const cleanHTML = cleanKatexFromHTML(result.innerHTML);
+    const cleanHTML = cleanKatexFromHTML(result);
     const textContent = cleanHTML.textContent;
     if (!textContent) {
       throw new Error(`no text content in ${headerText}`);
@@ -47,7 +50,7 @@ export class ScrapeService {
     return await this.page.evaluate(() => {
       const pairs: Sample[] = [];
 
-      const sections = document.querySelectorAll("sections");
+      const sections = document.querySelectorAll("section");
       let lastLabel = "";
       let lastContent = "";
       for (const section of sections) {
@@ -90,9 +93,9 @@ export class ScrapeService {
       return element.textContent as string;
     });
 
-    let score = await this.page.$eval(
+    const score = await this.page.$eval(
       "html body div#main-div.float-container div#main-container.container div.row div.col-sm-12 div#task-statement span.lang span.lang-en p var span span.katex span.katex-mathml math semantics annotation",
-      (element) => element.textContent,
+      (element) => element.textContent as string,
     );
     const statement = await this.getFormattedText("Problem Statement");
     const constraints = await this.getFormattedText("Constraints");

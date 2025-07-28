@@ -1,11 +1,14 @@
 import { ScrapeService } from "./sevices/ScrapeService";
+import { delay } from "./util";
 import type { Task } from "./types";
 import puppeteer from "puppeteer";
 
 const testLink = "https://atcoder.jp/contests/abc416/tasks";
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+  });
   const page = await browser.newPage();
   const scrapeService = new ScrapeService(browser, page);
 
