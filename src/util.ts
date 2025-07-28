@@ -1,5 +1,6 @@
 import { JSDOM } from "jsdom";
 import type { Page } from "puppeteer";
+
 export function cleanKatexFromHTML(html: string): DocumentFragment {
   const dom = new JSDOM(html);
   const doc = dom.window.document;
