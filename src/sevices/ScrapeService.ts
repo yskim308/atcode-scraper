@@ -36,10 +36,8 @@ export class ScrapeService {
     return cleanHTML.textContent;
   }
 
-  async getSamples(): Promise<Sample[]> {
-    const samples = await this.page.evaluate(() => {
+  async getSamples(sections: HTMLElement[]): Promise<Sample[]> {
       const pairs: Sample[] = [];
-      const sections = Array.from(document.querySelectorAll("section"));
 
       let lastLabel = "";
       let lastContent = "";
@@ -64,8 +62,6 @@ export class ScrapeService {
         }
       }
       return pairs;
-    });
-    return samples;
   }
 
   async scrapeTaskInfo(taskURL: string): Promise<Task> {
@@ -88,13 +84,14 @@ export class ScrapeService {
       return sections;
     })
 
-    const score = this.getFormattedText(sections, "Score");
+    let score = this.getFormattedText(sections, "Score");
+    score = score.slice(1, -1); // dont want latext on score
     const statement = this.getFormattedText(sections, "Problem Statement");
     const constraints = this.getFormattedText(sections, "Constraints");
     let input = this.getFormattedText(sections, "Input");
     let output = this.getFormattedText(sections, "Output");
 
-    const samples = await this.getSamples();
+    const samples = await this.getSamples(sections);
     return {
       id,
       url,
