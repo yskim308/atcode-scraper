@@ -1,9 +1,9 @@
 import { ScrapeService } from "./sevices/ScrapeService";
-import { delay } from "./util";
 import type { Task } from "./types";
+import readlineSync from "readline-sync";
 import puppeteer from "puppeteer";
 
-const testLink = "https://atcoder.jp/contests/abc416/tasks";
+const testLink = readlineSync.question("insert contest link\n");
 
 (async () => {
   const browser = await puppeteer.launch({
