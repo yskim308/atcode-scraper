@@ -1,7 +1,6 @@
 import type { Page, Browser } from "puppeteer";
 import type { Task, Sample } from "../types";
-import { JSDOM } from "jsdom";
-import { cleanKatexFromHTML } from "../util";}
+import { cleanKatexFromHTML } from "../util";
 
 export class ScrapeService {
   private browser: Browser;
@@ -23,12 +22,12 @@ export class ScrapeService {
 
   getFormattedText(sections: HTMLElement[], headerText: string) {
     const targetSection = sections.find((section) => {
-      section.querySelector('h3')?.innerText === headerText;
-    })
+      section.querySelector("h3")?.innerText === headerText;
+    });
     if (!targetSection) {
       throw new Error(`header text ${headerText} could not be found`);
     }
-    targetSection.querySelector('h3')?.remove();
+    targetSection.querySelector("h3")?.remove();
     const cleanHTML = cleanKatexFromHTML(targetSection?.innerHTML);
     if (!cleanHTML.textContent) {
       throw new Error(`text content in ${headerText} is null?`);
@@ -37,31 +36,31 @@ export class ScrapeService {
   }
 
   async getSamples(sections: HTMLElement[]): Promise<Sample[]> {
-      const pairs: Sample[] = [];
+    const pairs: Sample[] = [];
 
-      let lastLabel = "";
-      let lastContent = "";
-      for (const section of sections) {
-        const h3 = section.querySelector("h3");
-        const pre = section.querySelector("pre");
-        if (!h3 || !pre) continue;
+    let lastLabel = "";
+    let lastContent = "";
+    for (const section of sections) {
+      const h3 = section.querySelector("h3");
+      const pre = section.querySelector("pre");
+      if (!h3 || !pre) continue;
 
-        const label = h3.textContent?.trim().toLowerCase() ?? "";
-        const content = pre.textContent?.trim() ?? "";
+      const label = h3.textContent?.trim().toLowerCase() ?? "";
+      const content = pre.textContent?.trim() ?? "";
 
-        if (label.includes("sample input")) {
-          lastLabel = label;
-          lastContent = content;
-        } else if (label.includes("sample output")) {
-          pairs.push({
-            input: lastContent,
-            output: content,
-          });
-          lastLabel = "";
-          lastContent = "";
-        }
+      if (label.includes("sample input")) {
+        lastLabel = label;
+        lastContent = content;
+      } else if (label.includes("sample output")) {
+        pairs.push({
+          input: lastContent,
+          output: content,
+        });
+        lastLabel = "";
+        lastContent = "";
       }
-      return pairs;
+    }
+    return pairs;
   }
 
   async scrapeTaskInfo(taskURL: string): Promise<Task> {
@@ -80,9 +79,12 @@ export class ScrapeService {
       return element.textContent as string;
     });
 
-    const sections: HTMLElement[] = await this.page.$$eval('section', (sections) => {
-      return sections;
-    })
+    const sections: HTMLElement[] = await this.page.$$eval(
+      "section",
+      (sections) => {
+        return sections;
+      },
+    );
 
     let score = this.getFormattedText(sections, "Score");
     score = score.slice(1, -1); // dont want latext on score
