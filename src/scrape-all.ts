@@ -5,9 +5,7 @@ import type { Task } from "./types";
 import { mongoService } from "./sevices/MongoService";
 
 (async () => {
-  const browser = await puppeteer.launch({
-    headless: false,
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage(); // THIS IS THE KEY PART
   page.on("console", (msg) => {
     for (let i = 0; i < msg.args().length; ++i)
