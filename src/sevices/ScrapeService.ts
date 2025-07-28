@@ -78,7 +78,12 @@ export class ScrapeService {
   }
 
   async scrapeTaskInfo(taskURL: string): Promise<Task> {
-    await this.page.goto(taskURL);
+    const response = await this.page.goto(taskURL);
+    if (response && !response.ok) {
+      throw new Error(
+        `navigation to ${taskURL} failed with code ${response.status}`,
+      );
+    }
     // get id from url
     const urlObject = new URL(taskURL);
     const pathParts = urlObject.pathname.split("/");
