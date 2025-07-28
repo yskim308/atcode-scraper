@@ -90,7 +90,8 @@ export class ScrapeService {
     const taskName = await this.page.$eval(taskNameSelector, (element) => {
       const anchor = element.querySelector("a");
       anchor?.remove();
-      return element.textContent as string;
+      const textContent = element.textContent as string;
+      return textContent.trim();
     });
 
     const score = await this.page.$eval(

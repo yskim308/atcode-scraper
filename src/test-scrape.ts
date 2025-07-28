@@ -21,4 +21,5 @@ const testLink = "https://atcoder.jp/contests/abc416/tasks";
     console.log(`scraped task from :${link}`);
     console.log(task);
   }
+  browser.close();
 })();
