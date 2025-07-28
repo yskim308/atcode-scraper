@@ -8,23 +8,25 @@ import { mongoService } from "./sevices/MongoService";
   const browser = await puppeteer.launch({
     headless: false,
   });
-  const page = await browser.newPage();
+  const page = await browser.newPage(); // THIS IS THE KEY PART
+  page.on("console", (msg) => {
+    for (let i = 0; i < msg.args().length; ++i)
+      console.log(`${i}: ${msg.args()[i]}`);
+  });
   const scrapeService = new ScrapeService(browser, page);
 
-  for (let i = 86; i <= 416; ++i) {
+  for (let i = 132; i <= 416; ++i) {
     // getting task links
     let contestNumber: string = i < 100 ? `0${i}` : `${i}`;
     const contestLink = `https://atcoder.jp/contests/abc${contestNumber}/tasks`;
     const links = await scrapeService.getTaskLinks(contestLink);
     console.log(`scraping links from: ${contestLink}`);
-    console.log(links);
 
     // scraping each task
     for (const link of links) {
       // delay between 1 and 5 seconds randomly
       const task: Task = await scrapeService.scrapeTaskInfo(link);
-      console.log("scraped task, and inserting: ");
-      console.log(task);
+      console.log(`scraped ${task.id}, trying to insert...`);
       mongoService.insertTask(task);
     }
   }
