@@ -22,8 +22,6 @@ import { mongoService } from "./sevices/MongoService";
     // scraping each task
     for (const link of links) {
       // delay between 1 and 5 seconds randomly
-      const randomDelay = Math.floor(Math.random() * 4) + 1;
-      await delay(randomDelay);
       const task: Task = await scrapeService.scrapeTaskInfo(link);
       console.log("scraped task, and inserting: ");
       console.log(task);
