@@ -5,7 +5,8 @@
     "@types/bun": "latest",
     "@types/jsdom": "^21.1.7",
     "@types/mongodb": "^4.0.7",
-    "@types/puppeteer": "^7.0.4"
+    "@types/puppeteer": "^7.0.4",
+    "@types/readline-sync": "^1.4.8"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -15,6 +16,7 @@
   "dependencies": {
     "jsdom": "^26.1.0",
     "mongodb": "^6.18.0",
-    "puppeteer": "^24.15.0"
+    "puppeteer": "^24.15.0",
+    "readline-sync": "^1.4.10"
   }
 }
