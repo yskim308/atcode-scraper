@@ -31,7 +31,7 @@ export class ScrapeService {
         return label.includes(headerText);
       });
       if (!targetSection) {
-        throw new Error(`header text ${headerText} could not be found`);
+        return "";
       }
       targetSection.querySelector("h3")?.remove();
       return targetSection.innerHTML;
@@ -41,7 +41,7 @@ export class ScrapeService {
     const cleanHTML = cleanKatexFromHTML(result);
     const textContent = cleanHTML.textContent;
     if (!textContent) {
-      throw new Error(`no text content in ${headerText}`);
+      return "";
     }
     return textContent;
   }
