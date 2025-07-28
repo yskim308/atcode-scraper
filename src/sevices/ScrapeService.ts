@@ -90,15 +90,10 @@ export class ScrapeService {
       return element.textContent as string;
     });
 
-    const sections: HTMLElement[] = await this.page.$$eval(
-      "section",
-      (sections) => {
-        return sections;
-      },
+    let score = await this.page.$eval(
+      "html body div#main-div.float-container div#main-container.container div.row div.col-sm-12 div#task-statement span.lang span.lang-en p var span span.katex span.katex-mathml math semantics annotation",
+      (element) => element.textContent,
     );
-
-    let score = await this.getFormattedText("Score");
-    score = score.slice(1, -1); // dont want latext on score
     const statement = await this.getFormattedText("Problem Statement");
     const constraints = await this.getFormattedText("Constraints");
     let input = await this.getFormattedText("Input");
