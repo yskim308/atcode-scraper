@@ -27,7 +27,7 @@ export class ScrapeService {
       const targetSection = Array.from(sections).find((section) => {
         const h3 = section.querySelector("h3");
         if (!h3) return false;
-        const label = h3.textContent?.trim() ?? "";
+        const label = h3.textContent?.trim().toLowerCase() ?? "";
         return label.includes(headerText);
       });
       if (!targetSection) {
@@ -103,10 +103,10 @@ export class ScrapeService {
       "html body div#main-div.float-container div#main-container.container div.row div.col-sm-12 div#task-statement span.lang span.lang-en p var span span.katex span.katex-mathml math semantics annotation",
       (element) => element.textContent as string,
     );
-    const statement = await this.getFormattedText("Problem Statement");
-    const constraints = await this.getFormattedText("Constraints");
-    let input = await this.getFormattedText("Input");
-    let output = await this.getFormattedText("Output");
+    const statement = await this.getFormattedText("problem statement");
+    const constraints = await this.getFormattedText("constraints");
+    let input = await this.getFormattedText("input");
+    let output = await this.getFormattedText("output");
 
     const samples = await this.getSamples();
     return {
