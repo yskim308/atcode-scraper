@@ -20,7 +20,10 @@ class MongoService {
   async insertTask(document: Task) {
     const tasks = this.db.collection("tasks");
     const exists = await tasks.findOne({ id: document.id });
-    if (exists) return;
+    if (exists) {
+      console.log(`${document.id} already exists, will NOT INSERT`);
+      return;
+    }
     await tasks.insertOne(document);
   }
 
