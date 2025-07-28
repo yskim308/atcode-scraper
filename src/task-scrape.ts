@@ -14,5 +14,6 @@ import puppeteer from "puppeteer";
   const scrapeService = new ScrapeService(browser, page);
 
   const task: Task = await scrapeService.scrapeTaskInfo(taskLink);
+  console.log(task);
   browser.close();
 })();

@@ -13,7 +13,7 @@ import { mongoService } from "./sevices/MongoService";
   });
   const scrapeService = new ScrapeService(browser, page);
 
-  for (let i = 234; i <= 416; ++i) {
+  for (let i = 327; i <= 416; ++i) {
     // getting task links
     let contestNumber: string = i < 100 ? `0${i}` : `${i}`;
     const contestLink = `https://atcoder.jp/contests/abc${contestNumber}/tasks`;
@@ -23,8 +23,10 @@ import { mongoService } from "./sevices/MongoService";
     // scraping each task
     for (const link of links) {
       // delay between 1 and 5 seconds randomly
+      /*
       const delayInSeconds = Math.floor(Math.random() * 5) + 1;
       await delay(delayInSeconds);
+      */
       const task: Task = await scrapeService.scrapeTaskInfo(link);
       console.log(`scraped ${task.id}, trying to insert...`);
       mongoService.insertTask(task);
