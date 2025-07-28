@@ -43,32 +43,35 @@ export class ScrapeService {
     return textContent;
   }
 
-  async getSamples(sections: HTMLElement[]): Promise<Sample[]> {
-    const pairs: Sample[] = [];
+  async getSamples(): Promise<Sample[]> {
+    return await this.page.evaluate(() => {
+      const pairs: Sample[] = [];
 
-    let lastLabel = "";
-    let lastContent = "";
-    for (const section of sections) {
-      const h3 = section.querySelector("h3");
-      const pre = section.querySelector("pre");
-      if (!h3 || !pre) continue;
+      const sections = document.querySelectorAll("sections");
+      let lastLabel = "";
+      let lastContent = "";
+      for (const section of sections) {
+        const h3 = section.querySelector("h3");
+        const pre = section.querySelector("pre");
+        if (!h3 || !pre) continue;
 
-      const label = h3.textContent?.trim().toLowerCase() ?? "";
-      const content = pre.textContent?.trim() ?? "";
+        const label = h3.textContent?.trim().toLowerCase() ?? "";
+        const content = pre.textContent?.trim() ?? "";
 
-      if (label.includes("sample input")) {
-        lastLabel = label;
-        lastContent = content;
-      } else if (label.includes("sample output")) {
-        pairs.push({
-          input: lastContent,
-          output: content,
-        });
-        lastLabel = "";
-        lastContent = "";
+        if (label.includes("sample input")) {
+          lastLabel = label;
+          lastContent = content;
+        } else if (label.includes("sample output")) {
+          pairs.push({
+            input: lastContent,
+            output: content,
+          });
+          lastLabel = "";
+          lastContent = "";
+        }
       }
-    }
-    return pairs;
+      return pairs;
+    });
   }
 
   async scrapeTaskInfo(taskURL: string): Promise<Task> {
@@ -94,14 +97,14 @@ export class ScrapeService {
       },
     );
 
-    let score = this.getFormattedText(sections, "Score");
+    let score = await this.getFormattedText("Score");
     score = score.slice(1, -1); // dont want latext on score
-    const statement = this.getFormattedText(sections, "Problem Statement");
-    const constraints = this.getFormattedText(sections, "Constraints");
-    let input = this.getFormattedText(sections, "Input");
-    let output = this.getFormattedText(sections, "Output");
+    const statement = await this.getFormattedText("Problem Statement");
+    const constraints = await this.getFormattedText("Constraints");
+    let input = await this.getFormattedText("Input");
+    let output = await this.getFormattedText("Output");
 
-    const samples = await this.getSamples(sections);
+    const samples = await this.getSamples();
     return {
       id,
       url,
