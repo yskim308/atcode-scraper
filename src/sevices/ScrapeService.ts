@@ -90,8 +90,7 @@ export class ScrapeService {
     const id = pathParts[pathParts.length - 1];
     const url = taskURL;
 
-    const taskNameSelector =
-      "html body div#main-div.float-container div#main-container.container div.row div.col-sm-12 span.h2";
+    const taskNameSelector = ".h2";
     const taskName = await this.page.$eval(taskNameSelector, (element) => {
       const anchor = element.querySelector("a");
       anchor?.remove();
@@ -99,10 +98,16 @@ export class ScrapeService {
       return textContent.trim();
     });
 
-    const score = await this.page.$eval(
-      "html body div#main-div.float-container div#main-container.container div.row div.col-sm-12 div#task-statement span.lang span.lang-en p var span span.katex span.katex-mathml math semantics annotation",
-      (element) => element.textContent as string,
-    );
+    const score = await this.page.$$eval("p", (paragraphs) => {
+      const scoreParagraph = paragraphs.find((p) =>
+        p.textContent?.includes("points"),
+      );
+      if (!scoreParagraph) return "";
+      const scoreDiv = scoreParagraph.querySelector(".katex-html");
+      if (!scoreDiv || !scoreDiv.textContent) return "";
+      return scoreDiv.textContent;
+    });
+
     const statement = await this.getFormattedText("problem statement");
     const constraints = await this.getFormattedText("constraints");
     let input = await this.getFormattedText("input");
