@@ -5,7 +5,9 @@ import type { Task } from "./types";
 import { mongoService } from "./sevices/MongoService";
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+  });
   const page = await browser.newPage();
   const scrapeService = new ScrapeService(browser, page);
 
