@@ -16,6 +16,9 @@ class MongoService {
     }
     this.db = this.client.db(DB_NAME);
   }
+  getDb(): Db {
+    return this.db;
+  }
 
   async insertTask(document: Task) {
     const tasks = this.db.collection("tasks");
