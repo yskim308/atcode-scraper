@@ -1,6 +1,6 @@
 import readlineSync from "readline-sync";
-import { ScrapeService } from "./sevices/ScrapeService";
-import type { Task } from "./types";
+import { ScrapeService } from "../sevices/ScrapeService";
+import type { Task } from "../types";
 
 const taskLink = readlineSync.question("enter task link\n");
 

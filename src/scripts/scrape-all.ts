@@ -1,8 +1,8 @@
 import puppeteer from "puppeteer";
-import { ScrapeService } from "./sevices/ScrapeService";
-import { delay } from "./util";
-import type { Task } from "./types";
-import { mongoService } from "./sevices/MongoService";
+import { ScrapeService } from "../sevices/ScrapeService";
+import { delay } from "../util";
+import type { Task } from "../types";
+import { mongoService } from "../sevices/MongoService";
 
 (async () => {
   const browser = await puppeteer.launch();

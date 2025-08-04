@@ -1,5 +1,5 @@
-import { ScrapeService } from "./sevices/ScrapeService";
-import type { Task } from "./types";
+import { ScrapeService } from "../sevices/ScrapeService";
+import type { Task } from "../types";
 import readlineSync from "readline-sync";
 import puppeteer from "puppeteer";
 
